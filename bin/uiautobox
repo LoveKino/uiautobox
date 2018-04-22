@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+const path = require('path');
+
+const electron = require('electron');
+
+const proc = require('child_process');
+
+const yargs = require('yargs');
+
+yargs.usage(`Usage: lumine-skelton
+    -f [config js file path]
+        `).demandOption([]).help('h').alias('h', 'help');
+
+const {
+  argv
+} = yargs;
+
+if(argv.f) {
+  const child = proc.spawn(electron, [path.join(__dirname, '..')].concat(process.argv.slice(2)), {stdio: 'inherit'});
+
+  child.on('close', function (code) {
+    process.exit(code);
+  });
+}

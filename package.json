@@ -7,12 +7,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
   },
+  "bin": {
+    "uiautobox": "./bin/uiautobox"
+  },
   "keywords": [
     "testbox"
   ],
   "author": "ddchen",
   "license": "MIT",
   "dependencies": {
-    "electron": "^1.8.4"
+    "electron": "^1.8.4",
+    "yargs": "^11.0.0"
   }
 }

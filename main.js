@@ -1,41 +1,36 @@
 const electron = require('electron');
+const path = require('path');
+const yargs = require('yargs');
+
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
+const {
+  argv
+} = yargs;
+const configJsFile = argv.f;
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
+const pageConfig = require(path.join(process.cwd(), configJsFile));
+
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
-    width: 900,
-    height: 1000
-  });
+  mainWindow = new BrowserWindow(pageConfig.windowConfig);
 
   // and load the index.html of the app.
-  mainWindow.loadURL('http://127.0.0.1:8080');
-  mainWindow.hide();
+  mainWindow.loadURL(pageConfig.url);
+  // mainWindow.hide();
 
-  electron.session.defaultSession.cookies.set({
-    url: 'http://127.0.0.1:8080',
-    name: '_sessiondata',
-    value: '36ECE60909D14E266417B38BD8BC3DE7221F643A-1524456166710-xarre.chen%40shopee.com'
-  }, () => {});
-
-  electron.session.defaultSession.cookies.set({
-    url: 'http://127.0.0.1:8080',
-    name: '_refreshtoken',
-    value: 'd41411tnt7n9djnn:okrhr49us8t8344g441v26iposv38dhf58nl9ds7ovkkmk8bgbi920ff18ge1122'
-  }, () => {});
-
-  electron.session.defaultSession.cookies.set({
-    url: 'http://127.0.0.1:8080',
-    name: 'XSRF-TOKEN',
-    value: '5ckj5ro1c7qpa2fgh4u18l461tmkquki77bm2dcsvftk5jc4itl9o1otf5pvd6cu'
-  }, () => {});
+  pageConfig.cookies.forEach((cookie) => {
+    electron.session.defaultSession.cookies.set(cookie, () => {
+      // TODO error catch
+    });
+  });
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -58,6 +53,8 @@ electron.ipcMain.on('general-communication', (e, arg) => {
   if (type === 'flushAndExit') {
     console.log(data); // eslint-disable-line
     app.quit();
+  } else if (type === 'log') {
+    console.log(data); // eslint-disable-line
   }
 });
 
