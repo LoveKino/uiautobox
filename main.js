@@ -51,8 +51,8 @@ electron.ipcMain.on('general-communication', (e, arg) => {
     data
   } = JSON.parse(arg);
   if (type === 'flushAndExit') {
-    console.log(data); // eslint-disable-line
-    app.quit();
+    console.log(data.msg); // eslint-disable-line
+    app.exit(data.code || 0);
   } else if (type === 'log') {
     console.log(data); // eslint-disable-line
   }
