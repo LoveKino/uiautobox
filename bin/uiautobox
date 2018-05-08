@@ -8,7 +8,7 @@ const proc = require('child_process');
 
 const yargs = require('yargs');
 
-yargs.usage(`Usage: lumine-skelton
+yargs.usage(`Usage: uiautobox
     -f [config js file path]
         `).demandOption([]).help('h').alias('h', 'help');
 
